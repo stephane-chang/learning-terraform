@@ -46,7 +46,8 @@ resource "aws_instance" "blog" {
 }
 
 module "alb" {
-  source = "terraform-aws-modules/alb/aws"
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 8.0"
 
   name            = "blog-alb"
   vpc_id          = module.blog_vpc.vpc_id
@@ -69,14 +70,14 @@ module "alb" {
       }
     }
   ]
-
-  listeners = {
-    ex-http-https-redirect = {
-      port     = 80
-      protocol = "HTTP"
+  
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
       target_group_index = 0
     }
-  }
+  ]
 
   tags = {
     Environment = "dev"
